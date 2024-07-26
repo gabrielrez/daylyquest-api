@@ -2,73 +2,65 @@
 
 class Router
 {
-  private $controller;
-  private $method;
-  private $controllerMethod;
-  private $params = [];
+  private static $routes = [];
 
-  function __construct()
+  public static function get($path, $handler)
   {
-    $url = $this->parseURL();
-
-    if (file_exists("../Controllers/" . ucfirst($url[1]) . ".php")) {
-      $this->controller = $url[1];
-      unset($url[1]);
-    } elseif (empty($url[1])) {
-      echo "Hi, this is the DaylyQuest API!";
-      exit;
-    } else {
-      http_response_code(404);
-      echo json_encode(["erro" => "Resource not found"]);
-    }
-
-    require_once "../Controllers/" . ucfirst($this->controller) . ".php";
-
-    $this->controller = new $this->controller;
-    $this->method = $_SERVER["REQUEST_METHOD"];
-
-    switch ($this->method) {
-      case "GET":
-        if (isset($url[2])) {
-          $this->controllerMethod = "find";
-          $this->params = [$url[2]];
-        } else {
-          $this->controllerMethod = "index";
-        }
-        break;
-      case "POST":
-        $this->controllerMethod = "store";
-        break;
-      case "PUT":
-        $this->controllerMethod = "update";
-        if (isset($url[2]) && is_numeric($url[2])) {
-          $this->params = [$url[2]];
-        } else {
-          http_response_code(400);
-          echo json_encode(["erro" => "You need to provide an id"]);
-          exit;
-        }
-        break;
-      case "DELETE":
-        $this->controllerMethod = "delete";
-        if (isset($url[2]) && is_numeric($url[2])) {
-          $this->params = [$url[2]];
-        } else {
-          http_response_code(400);
-          echo json_encode(["erro" => "You need to provide an id"]);
-          exit;
-        }
-        break;
-      default:
-        echo "Unsupported method";
-        exit;
-        break;
-    }
-    call_user_func_array([$this->controller, $this->controllerMethod], $this->params);
+    self::addRoute('GET', $path, $handler);
   }
 
-  private function parseURL()
+  public static function post($path, $handler)
   {
-    return explode("/", $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"]);
+    self::addRoute('POST', $path, $handler);
+  }
+
+  public static function put($path, $handler)
+  {
+    self::addRoute('PUT', $path, $handler);
+  }
+
+  public static function delete($path, $handler)
+  {
+    self::addRoute('DELETE', $path, $handler);
+  }
+
+  private static function addRoute($method, $path, $handler)
+  {
+    self::$routes[] = compact('method', 'path', 'handler');
+  }
+
+  public static function run()
+  {
+    $method = $_SERVER['REQUEST_METHOD'];
+    $path = $_SERVER['REQUEST_URI'];
+
+    foreach (self::$routes as $route) {
+      if ($route['method'] === $method && $route['path'] === $path) {
+        $handler = $route['handler'];
+
+        if (is_string($handler)) {
+          list($controller, $action) = explode('@', $handler);
+          $controllerClass = 'App\\Controllers\\' . $controller;
+
+          if (class_exists($controllerClass)) {
+            $controllerInstance = new $controllerClass();
+            if (method_exists($controllerInstance, $action)) {
+              return $controllerInstance->$action();
+            } else {
+              http_response_code(500);
+              echo "Method $action not found in $controllerClass";
+            }
+          } else {
+            http_response_code(500);
+            echo "Controller $controllerClass not found";
+          }
+        } elseif (is_callable($handler)) {
+          return call_user_func($handler);
+        }
+      }
+    }
+
+    http_response_code(404);
+    echo "404 Not Found";
   }
 }

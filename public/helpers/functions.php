@@ -3,6 +3,6 @@
 function dd($var)
 {
   echo "<pre>";
-  die(var_dump($var));
+  die(print_r($var));
   echo "<pre>";
 }
