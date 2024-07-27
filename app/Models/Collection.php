@@ -4,10 +4,10 @@ namespace App\Model;
 
 use App\Core\Model;
 
-class HomeModel extends Model
+class Collection extends Model
 {
   public function index()
   {
-    echo 'Home Model';
+    echo "Collection Model";
   }
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Core;
+
 class Model
 {
   private static $conn;
@@ -8,9 +10,7 @@ class Model
   {
     if (!isset(self::$conn)) {
       $dsn = 'mysql:' . http_build_query($config, '', ';');
-      self::$conn = new \PDO($dsn, $username, $password, [
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-      ]);
+      self::$conn = new \PDO($dsn, $username, $password);
     }
     return self::$conn;
   }
