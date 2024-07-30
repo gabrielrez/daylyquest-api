@@ -39,7 +39,7 @@ class Router
         $handler = $route['handler'];
 
         if (is_string($handler)) {
-          list($controller, $action) = explode('@', $handler);
+          list($controller, $action) = explode('::', $handler);
           $controllerClass = 'App\\Controllers\\' . $controller;
 
           if (class_exists($controllerClass)) {

@@ -8,6 +8,6 @@ class Collections extends Controller
 {
   public function index()
   {
-    echo "Collections Controller";
+    echo 'Collections Controller';
   }
 }

@@ -6,7 +6,7 @@ class Controller
 {
   public function model($model)
   {
-    require_once '../App/Models/' . $model . '.php';
+    require_once '../Models/' . $model . '.php';
     return new $model;
   }
 
@@ -14,7 +14,6 @@ class Controller
   {
     $json = file_get_contents("php://input");
     $obj = json_decode($json);
-
     return $obj;
   }
 }
