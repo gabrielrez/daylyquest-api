@@ -10,6 +10,7 @@ require '../app/Core/Router.php';
 Router::get('/', 'HomeController::index');
 
 // Users
+Router::get('/users', 'UserController::index');
 
 
 // Collections

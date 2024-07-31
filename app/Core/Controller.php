@@ -6,7 +6,7 @@ class Controller
 {
   public function model($model)
   {
-    require_once '../Models/' . $model . '.php';
+    require_once '../Models/' . ucfirst($model) . 'Model.php';
     return new $model;
   }
 

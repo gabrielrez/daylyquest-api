@@ -4,9 +4,9 @@ namespace App\Model;
 
 use App\Core\Model;
 
-class User extends Model
+class UserModel extends Model
 {
-  public function index()
+  public function all()
   {
     echo "User Model";
   }
