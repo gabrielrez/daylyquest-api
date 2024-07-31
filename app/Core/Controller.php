@@ -2,12 +2,14 @@
 
 namespace App\Core;
 
+use App\Core\Model;
+
 class Controller
 {
-  public function model($model)
+  public function model($model): Model
   {
-    require_once '../Models/' . ucfirst($model) . 'Model.php';
-    return new $model;
+    $modelClass = 'App\\Models\\' . ucfirst($model) . 'Model';
+    return new $modelClass;
   }
 
   protected function getRequestBody()

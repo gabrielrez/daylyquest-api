@@ -1,5 +1,7 @@
 <?php
 
+use App\Core\Router;
+
 require_once '../vendor/autoload.php';
 require 'config.php';
 require 'helpers/functions.php';
