@@ -61,6 +61,22 @@ class Model
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
   }
 
+  public function insert($table, $values = [])
+  {
+    $columns = implode(', ', array_keys($values));
+    $placeholders = implode(', ', array_map(fn ($key) => ':' . $key, array_keys($values)));
+
+    $query = 'insert into ' . $table . ' (' . $columns . ') values (' . $placeholders . ')';
+
+    $stmt = $this->db->prepare($query);
+
+    foreach ($values as $key => $value) {
+      $stmt->bindValue(':' . $key, $value);
+    }
+
+    $stmt->execute();
+  }
+
   public function update($table, $set = [], $args = [])
   {
     $query = 'update ' . $table . ' set ';
