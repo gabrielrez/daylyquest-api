@@ -10,8 +10,8 @@ class Model
 
   public function __construct()
   {
-    $this->config = require '../../public/config.php';
-    $this->db = $this->getConn($this->config);
+    $this->config = require __DIR__ . '/../../public/config.php';
+    $this->db = $this->getConn($this->config['database']);
   }
 
   public static function getConn($config, $username = 'root', $password = '')

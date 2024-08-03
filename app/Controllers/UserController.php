@@ -15,6 +15,7 @@ class UserController extends Controller
 
   public function index()
   {
-    $this->model->all();
+    $users = $this->model->all('users');
+    dd($users);
   }
 }

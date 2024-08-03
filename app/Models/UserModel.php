@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use App\Core\Model;
 
 class UserModel extends Model
 {
-  public function all()
+  public function allUsers()
   {
-    echo "User Model";
+    $this->all('users');
   }
 }

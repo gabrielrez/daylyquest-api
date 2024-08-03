@@ -8,8 +8,8 @@ class Controller
 {
   public function model($model): Model
   {
-    $modelClass = 'App\\Models\\' . ucfirst($model) . 'Model';
-    return new $modelClass;
+    $model = 'App\\Models\\' . ucfirst($model) . 'Model';
+    return new $model;
   }
 
   protected function getRequestBody()
