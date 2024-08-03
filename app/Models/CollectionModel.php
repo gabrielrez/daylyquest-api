@@ -4,6 +4,6 @@ namespace App\Models;
 
 use App\Core\Model;
 
-class Collection extends Model
+class CollectionModel extends Model
 {
 }
