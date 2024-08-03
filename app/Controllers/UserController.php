@@ -13,9 +13,29 @@ class UserController extends Controller
     $this->model = $this->model('user');
   }
 
-  public function index()
+  public function register()
   {
-    $users = $this->model->all('users');
-    dd($users);
+    // Logic to register a new user
+  }
+
+  public function login()
+  {
+    // Logic to log in a user
+  }
+
+  public function logout()
+  {
+    // Logic to log out a user
+  }
+
+  public function info($user_id)
+  {
+    $user = $this->model->find('users', $user_id);
+    dd($user);
+  }
+
+  public function edit($user_id)
+  {
+    // Logic to update user info
   }
 }
