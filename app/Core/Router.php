@@ -28,16 +28,17 @@ class Router
 
   private static function addRoute($method, $path, $handler)
   {
+    $path = preg_replace('/{([^}]+)}/', '(?P<$1>[^/]+)', $path);
     self::$routes[] = compact('method', 'path', 'handler');
   }
 
   public static function run()
   {
     $method = $_SERVER['REQUEST_METHOD'];
-    $path = $_SERVER['REQUEST_URI'];
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
     foreach (self::$routes as $route) {
-      if ($route['method'] === $method && $route['path'] === $path) {
+      if ($route['method'] === $method && preg_match('#^' . $route['path'] . '$#', $path, $matches)) {
         $handler = $route['handler'];
 
         if (is_string($handler)) {
@@ -47,7 +48,7 @@ class Router
           if (class_exists($controllerClass)) {
             $controllerInstance = new $controllerClass();
             if (method_exists($controllerInstance, $action)) {
-              return $controllerInstance->$action();
+              return call_user_func_array([$controllerInstance, $action], array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY));
             } else {
               http_response_code(500);
               echo "Method $action not found in $controllerClass";
@@ -57,7 +58,7 @@ class Router
             echo "Controller $controllerClass not found";
           }
         } elseif (is_callable($handler)) {
-          return call_user_func($handler);
+          return call_user_func_array($handler, array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY));
         }
       }
     }

@@ -4,6 +4,6 @@ namespace App\Model;
 
 use App\Core\Model;
 
-class GoalModel extends Model
+class GoalsModel extends Model
 {
 }

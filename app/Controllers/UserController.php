@@ -10,7 +10,7 @@ class UserController extends Controller
 
   public function __construct()
   {
-    $this->model = $this->model('user');
+    $this->model = $this->model('users');
   }
 
   public function register()
@@ -30,8 +30,12 @@ class UserController extends Controller
 
   public function info($user_id)
   {
-    $user = $this->model->find('users', $user_id);
-    dd($user);
+    $user = $this->model->find('users', ['name', 'nickname', 'email', 'created_at'], ['id' => $user_id]);
+    if ($user) {
+      $this->response($user[0]);
+    } else {
+      $this->response(['message' => 'User not found'], 404);
+    }
   }
 
   public function edit($user_id)

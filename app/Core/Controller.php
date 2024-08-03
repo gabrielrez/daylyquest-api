@@ -8,8 +8,12 @@ class Controller
 {
   public function model($model): Model
   {
-    $model = 'App\\Models\\' . ucfirst($model) . 'Model';
-    return new $model;
+    $modelClass = 'App\\Models\\' . ucfirst($model) . 'Model'; // App\\Models\\UserModel.php
+    if (class_exists($modelClass)) {
+      return new $modelClass();
+    } else {
+      throw new \Exception("Model class '$modelClass' not found.");
+    }
   }
 
   protected function getRequestBody()
@@ -17,5 +21,13 @@ class Controller
     $json = file_get_contents("php://input");
     $obj = json_decode($json);
     return $obj;
+  }
+
+  protected function response($data, $status = 200)
+  {
+    http_response_code($status);
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    exit();
   }
 }
