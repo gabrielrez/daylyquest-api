@@ -7,6 +7,7 @@ use App\Core\Controller;
 class UserController extends Controller
 {
   protected $model;
+  protected $table = 'users';
 
   public function __construct()
   {
@@ -15,7 +16,30 @@ class UserController extends Controller
 
   public function register()
   {
-    // Logic to register a new user
+    // Data comming from form + encript password
+    $name = 'Sheldon';
+    $nickname = 'sheldon_big_bang_123';
+    $email = 'sheldon@gmail.com';
+    $password = 123;
+
+    if (empty($name) || empty($nickname) || empty($email) || empty($password)) {
+      $this->response(['message' => 'All fields are required'], 400);
+      return;
+    }
+
+    $user = [
+      'name' => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
+      'nickname' => htmlspecialchars($nickname, ENT_QUOTES, 'UTF-8'),
+      'email' => filter_var($email, FILTER_VALIDATE_EMAIL),
+      'password' => $password,
+    ];
+
+    try {
+      $this->model->insert($this->table, $user);
+      $this->response(['message' => 'User registered successfully'], 201);
+    } catch (\Exception $e) {
+      $this->response(['message' => 'Failed to register user'], 500);
+    }
   }
 
   public function login()
@@ -30,7 +54,7 @@ class UserController extends Controller
 
   public function info($user_id)
   {
-    $user = $this->model->find('users', ['name', 'nickname', 'email', 'created_at'], ['id' => $user_id]);
+    $user = $this->model->find($this->table, ['name', 'nickname', 'email', 'created_at'], ['id' => $user_id]);
     if ($user) {
       $this->response($user[0]);
     } else {
