@@ -21,6 +21,7 @@ class UserController extends Controller
     $nickname = 'sheldon_big_bang_123';
     $email = 'sheldon@gmail.com';
     $password = 123;
+    $encrypted_password = password_hash($password, PASSWORD_ARGON2I);
 
     if (empty($name) || empty($nickname) || empty($email) || empty($password)) {
       $this->response(['message' => 'All fields are required'], 400);
@@ -31,7 +32,7 @@ class UserController extends Controller
       'name' => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
       'nickname' => htmlspecialchars($nickname, ENT_QUOTES, 'UTF-8'),
       'email' => filter_var($email, FILTER_VALIDATE_EMAIL),
-      'password' => $password,
+      'password' => $encrypted_password,
     ];
 
     try {
