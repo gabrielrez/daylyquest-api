@@ -61,6 +61,30 @@ class Model
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
   }
 
+  public function search($table, $args = [])
+  {
+    $query = 'select 1 from ' . $table;
+
+    if (!empty($args)) {
+      $conditions = [];
+      foreach ($args as $key => $value) {
+        $conditions[] = $key . ' = :' . $key;
+      }
+      $query .= ' WHERE ' . implode(' and ', $conditions);
+    }
+
+    $stmt = $this->db->prepare($query);
+
+    if (!empty($args)) {
+      foreach ($args as $key => $value) {
+        $stmt->bindValue(':' . $key, $value);
+      }
+    }
+
+    $stmt->execute();
+    return (bool) $stmt->fetchColumn();
+  }
+
   public function insert($table, $values = [])
   {
     $columns = implode(', ', array_keys($values));
