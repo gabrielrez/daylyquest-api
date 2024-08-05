@@ -20,7 +20,7 @@ Router::get('/users/{user_id}', 'UserController::info'); // Get user info
 Router::put('/users/{user_id}', 'UserController::edit'); // Update user info
 
 // Collections
-Router::get('/collections', 'CollectionController::getAll'); // List all collections
+Router::get('/collections', 'CollectionController::get'); // List all collections
 Router::post('/collections', 'CollectionController::create'); // Create a new collection
 Router::get('/collections/{collection_id}', 'CollectionController::info'); // Get collection info
 Router::put('/collections/{collection_id}', 'CollectionController::edit'); // Update collection

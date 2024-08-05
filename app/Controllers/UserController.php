@@ -84,11 +84,11 @@ class UserController extends Controller
   public function info($user_id)
   {
     $user = $this->model->find($this->table, ['name', 'nickname', 'email', 'created_at'], ['id' => $user_id]);
-    if ($user) {
-      $this->response($user[0]);
-    } else {
+    if (!$user) {
       $this->response(['message' => 'User not found'], 404);
+      return;
     }
+    $this->response($user[0]);
   }
 
   public function edit($user_id)

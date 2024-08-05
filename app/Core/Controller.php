@@ -8,7 +8,7 @@ class Controller
 {
   public function model($model): Model
   {
-    $modelClass = 'App\\Models\\' . ucfirst($model) . 'Model'; // App\\Models\\UserModel.php
+    $modelClass = 'App\\Models\\' . ucfirst($model) . 'Model';
     if (class_exists($modelClass)) {
       return new $modelClass();
     } else {
